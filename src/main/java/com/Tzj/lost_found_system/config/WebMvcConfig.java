@@ -24,6 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/userLogin",   // 登录接口
                         "/email",       // 获取验证码
                         "/verifyCode",  // 验证验证码
+                        "/addUser",     // 注册新用户（未登录状态下需要）
+                        "/getUser",     // 检查用户名是否重复（注册时使用）
                         "/upload",      // 文件上传
                         "/download",    // 文件下载（图片等静态资源需要未登录也能访问）
                         "/error"        // Spring Boot 错误页面

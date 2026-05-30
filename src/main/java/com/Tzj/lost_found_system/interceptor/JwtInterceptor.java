@@ -11,9 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * JWT 认证拦截器
- * 拦截所有请求，对携带 token 的请求进行校验，并将用户信息注入请求属性。
- * 未携带 token 的请求仍然放行（兼容前端部分页面未统一使用 request.js 发送请求的情况）。
- * 前端路由守卫 + 后端关键接口鉴权已足够保障基本安全。
+ * 拦截所有非白名单接口，校验请求头中的 JWT token 是否有效。
+ * 前端已统一使用 request.js 携带 Authorization 头，拦截器恢复严格校验模式。
  */
 @Slf4j
 @Component
@@ -28,16 +27,19 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         String requestURI = request.getRequestURI();
 
-        // 从请求头中获取 token（前端 Axios 拦截器在 Authorization 头注入 JWT）
+        // 从请求头中获取 token（前端 request.js 拦截器在 Authorization 头注入 JWT）
         String token = request.getHeader("Authorization");
         if (token == null || token.isEmpty()) {
             // 兼容：也尝试从 token 头获取
             token = request.getHeader("token");
         }
 
-        // 没有 token 的请求直接放行（不做强制拦截，交由前端路由守卫和控制层自行判断）
         if (token == null || token.isEmpty()) {
-            return true;
+            log.warn("请求缺少JWT令牌，URI: {}，客户端IP: {}", requestURI, request.getRemoteAddr());
+            response.setStatus(401);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"code\":401,\"msg\":\"未登录或登录已过期\"}");
+            return false;
         }
 
         try {
@@ -47,12 +49,13 @@ public class JwtInterceptor implements HandlerInterceptor {
             request.setAttribute("userId", claims.get("uid"));
             request.setAttribute("userName", claims.get("uname"));
             request.setAttribute("role", claims.get("role"));
-            log.debug("JWT校验通过，用户ID: {}", claims.get("uid"));
             return true;
         } catch (Exception e) {
-            // 令牌无效时记录日志但仍放行，避免因过期 token 导致页面完全不可用
-            log.warn("JWT令牌解析失败但放行，URI: {}，错误: {}", requestURI, e.getMessage());
-            return true;
+            log.warn("JWT令牌解析失败，URI: {}，错误: {}", requestURI, e.getMessage());
+            response.setStatus(401);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"code\":401,\"msg\":\"令牌无效或已过期，请重新登录\"}");
+            return false;
         }
     }
 }
