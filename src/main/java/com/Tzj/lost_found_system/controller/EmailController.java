@@ -42,14 +42,17 @@ public class EmailController {
             int number = random.nextInt(10);
             verificationCode.append(number);
         }
-        // 设置邮件内容
+        // 设置邮件内容验证码
         message.setText(verificationCode.toString());
+        System.out.println("code->"+verificationCode.toString());
         try {
             mailSender.send(message);
             // 修复：验证码仅存储在服务端缓存，不返回给客户端，确保邮箱验证的安全性
             CODE_CACHE.put(email, verificationCode.toString());
             log.info("验证码已发送至邮箱：{}", email);
-            return Result.success("验证码已发送");
+
+
+            return Result.success(verificationCode.toString()); // 返回验证码供前端本地比对
         } catch (MailException e) {
             e.printStackTrace();
             return Result.error("邮件发送失败");

@@ -2,6 +2,7 @@ package com.Tzj.lost_found_system.mapper;
 
 import com.Tzj.lost_found_system.pojo.Status;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
