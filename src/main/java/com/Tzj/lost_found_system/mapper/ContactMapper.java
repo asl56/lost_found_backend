@@ -18,7 +18,7 @@ public interface ContactMapper {
 
     int addContact(Contact contact);
 
-    @Delete("delete from contact where id=#{id}")
+    @Delete("delete from contact where id=-#{id}")
     int deleteContact(@Param("id") Integer id);
 
     List<Contact> getFoundContact(@Param("page") Integer page, @Param("count") Integer count, @Param("id") Integer id, @Param("content") String content, @Param("contactTime") String contactTime, @Param("userID") Integer userID, @Param("foundID") Integer foundID,@Param("itemsUserID") Integer itemsUserID);
