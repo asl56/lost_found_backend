@@ -33,8 +33,13 @@ public class UserController {
     }
 
     @PostMapping("/addUser") //添加用户
-    public int addUser(@RequestBody User user){
-        return userService.addUser(user);
+    // 修复：返回 Result 而非 int，使前端能判断注册是否真正成功
+    public Result addUser(@RequestBody User user){
+        int result = userService.addUser(user);
+        if (result > 0) {
+            return Result.success("注册成功");
+        }
+        return Result.error("注册失败，请重试");
     }
     @GetMapping("/deleteUser")  //删除用户
     public int deleteUser(Integer id){

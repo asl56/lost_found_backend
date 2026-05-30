@@ -38,8 +38,9 @@ public class LoginController {
     }
 
     @GetMapping("/isLogin") // 验证JWT是否有效的接口
+    // 修复：前端 request.js 注入的是 Authorization 头，此处须保持一致
     public Result isLogin(HttpServletRequest req){
-        String jwt = req.getHeader("token");
+        String jwt = req.getHeader("Authorization");
         System.out.println(jwt);
         log.info("令牌：{}", jwt);
         try {

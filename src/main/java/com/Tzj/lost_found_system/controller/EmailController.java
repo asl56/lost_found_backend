@@ -23,8 +23,9 @@ public class EmailController {
     @Autowired
     private JavaMailSender mailSender;
 
-    // 修复：使用内存Map暂存验证码，key为邮箱地址，确保验证码仅通过邮件发送，不暴露在HTTP响应中
-    // 生产环境应使用Redis等分布式缓存替代
+    // 使用内存Map暂存验证码，供 /verifyCode 接口校验使用
+    // 注意：当前同时将验证码返回给前端做本地比对，生产环境应仅发送邮件不返回验证码
+    // 生产环境应使用Redis等分布式缓存替代 ConcurrentHashMap
     private static final Map<String, String> CODE_CACHE = new ConcurrentHashMap<>();
 
     @GetMapping("/email")

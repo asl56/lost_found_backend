@@ -41,7 +41,7 @@ public class LostController {
         return lostService.deleteLost(id);
     }
 
-    @GetMapping("getLostData")
+    @GetMapping("/getLostData") // 修复：添加前导斜杠，与其他接口保持一致
     public Result  getLostData(){
         return Result.success(lostService.getLostData());
     }

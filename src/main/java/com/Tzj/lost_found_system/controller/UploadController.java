@@ -28,15 +28,17 @@ public class UploadController {
     @PostMapping("/upload")
     // 此处的@RequestParam中的file名应与前端upload组件中的name的值保持一致
     public Result upload(@RequestParam("file") MultipartFile file) {
-        String fileName = file.getOriginalFilename(); // 修复：直接使用局部变量，避免线程安全问题
-        String suffix = fileName.substring(fileName.lastIndexOf('.'));
+        String originalName = file.getOriginalFilename(); // 修复：直接使用局部变量，避免线程安全问题
+        String suffix = originalName.substring(originalName.lastIndexOf('.'));
+        // 修复：添加时间戳前缀防止不同用户上传同名文件时互相覆盖
+        String fileName = System.currentTimeMillis() + "_" + originalName;
 
         File dir = new File(imgbase);
         if (!dir.exists()) {
             dir.mkdirs();
         }
         try {
-            file.transferTo(new File(imgbase + file.getOriginalFilename()));
+            file.transferTo(new File(imgbase + fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
