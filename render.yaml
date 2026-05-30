@@ -1,0 +1,17 @@
+# 后端部署配置 - Render.com
+# 默认启动命令: mvn spring-boot:run
+
+services:
+  - name: lost-found-backend
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -Xmx256m -jar target/LostFound.jar --server.port=${PORT:-8080}
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://<your-db-host>:3306/lost_found_system?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      - key: SPRING_DATASOURCE_USERNAME
+        value: <your-db-user>
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: <your-db-password>
+      - key: IMG_PATH
+        value: /tmp/uploads/
