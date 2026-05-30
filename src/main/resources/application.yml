@@ -17,7 +17,7 @@ mybatis:
   # 修复：实体类别名包路径应为项目实际POJO包
   type-aliases-package: com.Tzj.lost_found_system.pojo
 server:
-  port: 8080
+  port: 6024
 spring:
   http:
     encoding: UTF-8
