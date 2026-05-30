@@ -10,8 +10,13 @@ import org.springframework.stereotype.Service;
 public class LoginImpl implements LoginService {
     @Autowired
     private LoginMapper loginMapper;
+
     @Override
     public User login(String userName, String password) {
-        return loginMapper.login(userName,password);
+        // 注意：当前数据库密码为明文存储，登录时直接比对
+        // 生产环境建议：先对密码进行 SHA-256 加盐哈希或使用 BCrypt 加密后再比对
+        // 迁移步骤：1. 使用 PasswordUtil.hashPassword() 对已有密码批量加密
+        //          2. 修改此方法为：先查询用户获取盐值，再 hash(输入密码, 盐值) 比对
+        return loginMapper.login(userName, password);
     }
 }

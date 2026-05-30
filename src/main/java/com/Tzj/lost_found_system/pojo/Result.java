@@ -21,19 +21,23 @@ public class Result {
         this.data = data;
     }
 
+    // 返回成功的统一响应（修复拼写：sucesss -> success）
     public static Result success(){
-        return new Result(1,"sucesss",null);
+        return new Result(1,"success",null);
     }
 
+    // 返回带数据的成功响应
     public static Result success(Object data){
-        return new Result(1,"sucesss",data);
+        return new Result(1,"success",data);
     }
 
+    // 返回失败响应，携带错误信息
     public static Result error(String msg){
         return new Result(0,msg,null);
     }
 
+    // 返回带两个数据对象的成功响应（用于同时返回JWT令牌和用户信息等场景）
     public static Result successAndObject(Object data, Object data2) {
-        return new Result(1,"sucesss",data,data2);
+        return new Result(1,"success",data,data2);
     }
 }

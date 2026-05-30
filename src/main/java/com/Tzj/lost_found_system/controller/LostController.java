@@ -21,6 +21,7 @@ public class LostController {
     }
 
     @GetMapping("/getLost")
+    // 注意：userID 在数据库为 int 类型，此处为兼容前端传参使用 String，MyBatis 会自动转换
     public Result getLost(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "5") Integer count, Integer id,
                           String title, String description, String phone, String userID, String releaseDate, Integer statusID) {
         PageBean losts = lostService.getLost(page, count, id, title, description, phone, userID, releaseDate, statusID);

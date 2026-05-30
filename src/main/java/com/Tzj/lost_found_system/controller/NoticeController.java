@@ -22,7 +22,8 @@ public class NoticeController {
         return Result.success(notices);
     }
     @GetMapping("/getNotice") //按条件获取公告
-    public Result getNotice(Integer page,Integer count,Integer id,String title,String releaseDate,Integer userID){
+    // 修复：添加 @RequestParam 默认值，防止 page/count 为 null 导致分页异常
+    public Result getNotice(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "5") Integer count, Integer id, String title, String releaseDate, Integer userID){
         PageBean notices = noticeService.getNotice(page,count,id,title,releaseDate,userID);
         return Result.success(notices);
     }

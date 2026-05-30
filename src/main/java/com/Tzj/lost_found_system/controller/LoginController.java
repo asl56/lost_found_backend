@@ -20,36 +20,36 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/userLogin") //登录
+    @PostMapping("/userLogin") // 用户登录接口
     public Result login(String userName, String password) {
         User user = loginService.login(userName, password);
         System.out.println(user);
         if (user != null) {
-            Map<String, Object> clamis = new HashMap<>();
-            clamis.put("uid", user.getId());
-            clamis.put("uname", user.getUserName());
-            clamis.put("password", user.getPassword());
-            String jwt = JwtUtils.generateJwt(clamis);
+            // 修复：JWT中仅存储用户标识信息，不存储密码（密码明文放在JWT中有安全风险，JWT payload可被base64解码）
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("uid", user.getId());
+            claims.put("uname", user.getUserName());
+            claims.put("role", user.getRole());
+            String jwt = JwtUtils.generateJwt(claims);
             log.info("令牌：{}", jwt);
-            return Result.successAndObject(jwt,user);
+            return Result.successAndObject(jwt, user);
         }
         return Result.error("用户名或密码错误");
     }
 
-    @GetMapping("/isLogin")
+    @GetMapping("/isLogin") // 验证JWT是否有效的接口
     public Result isLogin(HttpServletRequest req){
-        String jwt= req.getHeader("token");
+        String jwt = req.getHeader("token");
         System.out.println(jwt);
-        log.info("令牌：{}",jwt);
+        log.info("令牌：{}", jwt);
         try {
             JwtUtils.testParseJwt(jwt);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             log.info("解析失败");
             Result error = Result.error("NOT_ERROR");
             return error;
         }
-
         return Result.success();
     }
 }

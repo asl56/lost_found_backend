@@ -18,36 +18,31 @@ import java.io.IOException;
 @Slf4j
 @RestController
 public class UploadController {
-    //@Autowired
-   // private StudentImpl studentImpl;
 
     @Value("${img.path}")
     private String imgbase;
 
-    private String fName;
+    // 修复：移除实例变量fName，Spring单例Controller中使用实例变量存在线程安全问题
+    // 改为在方法内部使用局部变量
 
-    @PostMapping( "/upload")
+    @PostMapping("/upload")
     // 此处的@RequestParam中的file名应与前端upload组件中的name的值保持一致
     public Result upload(@RequestParam("file") MultipartFile file) {
-        String fileName=file.getOriginalFilename();
-        String suffix=fileName.substring(fileName.lastIndexOf('.'));
+        String fileName = file.getOriginalFilename(); // 修复：直接使用局部变量，避免线程安全问题
+        String suffix = fileName.substring(fileName.lastIndexOf('.'));
 
-        ;
-
-       File dir= new File(imgbase);
-       if(!dir.exists()){
-           dir.mkdirs();
-       }
-       try {
-           fName=fileName;
-
-           file.transferTo(new File(imgbase+file.getOriginalFilename()));
-       }catch (IOException e){
-           e.printStackTrace();
-       }
-        String src=imgbase+fileName;
-        log.info("asfeaefaw:{}",src);
-        return Result.successAndObject(fileName,src);
+        File dir = new File(imgbase);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        try {
+            file.transferTo(new File(imgbase + file.getOriginalFilename()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String src = imgbase + fileName;
+        log.info("文件上传成功：{}", src);
+        return Result.successAndObject(fileName, src);
     }
 //
     @GetMapping("/download")

@@ -7,6 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface FeedBackMapper {
+    // PageHelper 分页插件：SQL 中无需 LIMIT，分页由 Service 层的 PageHelper.startPage() 拦截实现
     @Select("select * from feedback left join user on feedback.userID=user.id order by feedback.id desc")
     List<FeedBack> getAll(@Param("page") Integer page, @Param("count") Integer count);
 

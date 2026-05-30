@@ -12,8 +12,10 @@
 img:
   path: D:/imgUpload/
 mybatis:
-  mapper-locations: classpath:mappers/*xml
-  type-aliases-package: com.example.practice.mybatis.entity
+  # 修复：Mapper XML实际路径为 com/Tzj/lost_found_system/mapper/*.xml
+  mapper-locations: classpath:com/Tzj/lost_found_system/mapper/*.xml
+  # 修复：实体类别名包路径应为项目实际POJO包
+  type-aliases-package: com.Tzj.lost_found_system.pojo
 server:
   port: 8080
 spring:

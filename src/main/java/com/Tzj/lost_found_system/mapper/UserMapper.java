@@ -7,8 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+    // PageHelper 分页插件：page/count 参数由 Service 层传入供分页使用
     @Select("select * from user left join status on user.statusID=status.id")
-    List<User> getAll(Integer page,Integer count);
+    List<User> getAll(@Param("page") Integer page, @Param("count") Integer count);
 
     List<User> getUser(@Param("id") Integer id, @Param("userName") String userName, @Param("password") String password, @Param("name") String name, @Param("role") String role, @Param("phone") String phone, @Param("email") String email,@Param("page")Integer page,@Param("count")Integer count,@Param("statusID") Integer statusID);
 

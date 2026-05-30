@@ -8,8 +8,10 @@ import java.util.List;
 
 @Mapper
 public interface FoundMapper {
+    // PageHelper 分页插件在 Service 层通过 PageHelper.startPage(page,count) 接管分页
+    // Mapper 层 SQL 无需 LIMIT 子句
     @Select("select * from found order by releaseDate desc")
-    List<Found> getFoundAll(Integer page, Integer count);
+    List<Found> getFoundAll(@Param("page") Integer page, @Param("count") Integer count);
 
     List<Found> getFound(@Param("page") Integer page, @Param("count") Integer count, @Param("id") Integer id, @Param("title") String title, @Param("description") String description, @Param("phone") String phone, @Param("userID") String userID, @Param("releaseDate") String releaseDate, @Param("statusID") Integer statusID);
 
